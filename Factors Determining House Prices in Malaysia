@@ -1,1 +1,35 @@
+library(readxl)
 
+houses = read.csv(file.choose(), header=T)
+View(houses)
+
+#Cleaning the dataset
+#Step 1 Converting empty data or "-" into NaN
+houses[houses == "" | houses == "-"] = NA
+View(houses) #Check if it works
+
+#Step 2 Changing the variables into numerics
+houses$Bedroom = as.numeric(houses$Bathroom)
+houses$Bathroom = as.numeric(houses$Bathroom)
+houses$Parking.Lot =  as.numeric(houses$Parking.Lot)
+
+#Step 3 Changing variables with letters into only numerics
+houses$price = as.numeric(gsub("RM|\\s", "", houses$price))
+houses$Property.Size <- as.numeric(gsub("sq.ft.|,|\\s", "", houses$Property.Size))
+
+View(houses)
+
+#Step 4 Check for Duplication and remove them
+sum(duplicated(houses))
+houses <- houses[!duplicated(houses), ]
+
+sum(duplicated(houses)) # To confirm there are no more duplicated entries
+
+#Creating new meaningful variables
+houses$price_per_sqft = houses$price / houses$Property.Size #Normalises the price of houses by size
+houses$facilities_count = ifelse( #Counts the number of facilities each entry has
+  is.na(houses$Facilities),
+  0,
+  sapply(strsplit(houses$Facilities, ","), length)
+)
+View(houses)

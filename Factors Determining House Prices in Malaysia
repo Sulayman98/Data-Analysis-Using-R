@@ -3,7 +3,7 @@ library(readxl)
 houses = read.csv(file.choose(), header=T)
 View(houses)
 
-#Cleaning the dataset
+## Task 1: Cleaning the dataset and creating new variables
 #Step 1 Converting empty data or "-" into NaN
 houses[houses == "" | houses == "-"] = NA
 View(houses) #Check if it works
@@ -12,6 +12,7 @@ View(houses) #Check if it works
 houses$Bedroom = as.numeric(houses$Bathroom)
 houses$Bathroom = as.numeric(houses$Bathroom)
 houses$Parking.Lot =  as.numeric(houses$Parking.Lot)
+houses$Total.Units = as.numeric(houses$Total.Units)
 
 #Step 3 Changing variables with letters into only numerics
 houses$price = as.numeric(gsub("RM|\\s", "", houses$price))
@@ -25,7 +26,7 @@ houses <- houses[!duplicated(houses), ]
 
 sum(duplicated(houses)) # To confirm there are no more duplicated entries
 
-#Creating new meaningful variables
+# Step 5 Creating new meaningful variables
 houses$price_per_sqft = houses$price / houses$Property.Size #Normalises the price of houses by size
 houses$facilities_count = ifelse( #Counts the number of facilities each entry has
   is.na(houses$Facilities),
@@ -33,3 +34,30 @@ houses$facilities_count = ifelse( #Counts the number of facilities each entry ha
   sapply(strsplit(houses$Facilities, ","), length)
 )
 View(houses)
+
+# Step 6 Creating a separate new cleaned dataset with only selected variables for analysis
+houses_clean = houses[ , !(names(houses) %in% c("description", "Nearby.School", "Ad.List", "Category", "Building.Name", 
+                                                "Firm.Type", "Firm.Number", "REN.Number", "Bus.Stop"))]
+View(houses_clean)
+
+## Task 2 Data Analysis
+# Step 1 Summary Statistics
+summary_df = data.frame(
+  rbind(
+    summary(houses_clean$price),
+    summary(houses_clean$Bedroom),
+    summary(houses_clean$Bathroom),
+    summary(houses_clean$Total.Units),
+    summary(houses_clean$facilities_count),
+    summary(houses_clean$price_per_sqft)
+  )
+)
+summary_df
+
+rownames(summary_df) = c("price", "bedroom", "bathroom",
+                         "total units", "facilities count", "price per sq ft")
+summary_df
+
+# Step 2 Boxplots of selected variables
+boxplot(houses_clean$price, main= "House Prices", ylab="RM")
+boxplot(houses_clean$price_per_sqft, main = "Price per sqft", ylab="RM/sqft")

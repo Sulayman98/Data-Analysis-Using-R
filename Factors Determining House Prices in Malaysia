@@ -67,7 +67,8 @@ houses_clean[houses_clean$price_per_sqft > 5000, c("price", "Property.Size", "pr
 
 #Creating a new dataset where maximum per sq ft price is less than 5000 per sq ft
 houses_clean2 = houses_clean[houses_clean$price_per_sqft <= 5000, ]
-houses_clean2 = houses_clean2[houses_clean$Property.Size <= 10000, ]
+houses_clean2 = houses_clean2[houses_clean2$Property.Size <= 10000, ]
+
 
 summary_df2 = data.frame(
   rbind(
@@ -120,6 +121,12 @@ cor_matrix <- cor(variables_for_correl, use = "complete.obs")
 cor_matrix
 
 library(corrplot)
-
+dev.off()
 corrplot(cor_matrix, method = "color", type = "upper",
-         addCoef.col = "black", tl.col = "blue", tl.srt = 45)
+         addCoef.col = "green", tl.col = "blue", tl.srt = 45)
+
+## Task 3: Building a linear regression model
+prices.model1 <- lm(price~Property.Size, data=houses_clean2)
+summary(prices.model1)
+plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
+abline(prices.model1, col="red")

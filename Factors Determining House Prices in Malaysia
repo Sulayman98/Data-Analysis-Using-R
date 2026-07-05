@@ -61,3 +61,65 @@ summary_df
 # Step 2 Boxplots of selected variables
 boxplot(houses_clean$price, main= "House Prices", ylab="RM")
 boxplot(houses_clean$price_per_sqft, main = "Price per sqft", ylab="RM/sqft")
+
+#Further data cleaning given the presense of outliers
+houses_clean[houses_clean$price_per_sqft > 5000, c("price", "Property.Size", "price_per_sqft")] #2 outliers, most likely due to data entry errors
+
+#Creating a new dataset where maximum per sq ft price is less than 5000 per sq ft
+houses_clean2 = houses_clean[houses_clean$price_per_sqft <= 5000, ]
+houses_clean2 = houses_clean2[houses_clean$Property.Size <= 10000, ]
+
+summary_df2 = data.frame(
+  rbind(
+    summary(houses_clean2$price),
+    summary(houses_clean2$Bedroom),
+    summary(houses_clean2$Bathroom),
+    summary(houses_clean2$Total.Units),
+    summary(houses_clean2$facilities_count),
+    summary(houses_clean2$price_per_sqft),
+    summary(houses_clean2$Property.Size),
+    summary(houses_clean2$Parking.Lot)
+  )
+)
+summary_df2
+
+rownames(summary_df2) = c("price", "bedroom", "bathroom",
+                         "total units", "facilities count", "price per sq ft", "Size", "Parking.Lot")
+summary_df2
+
+#Step 3 new boxplot
+boxplot(houses_clean2$price_per_sqft, main = "Price per sq ft", ylab= "RM/sqft")
+
+#Step 4 scatterplot of prices against the main variables
+plot(houses_clean2$Bedroom, houses_clean2$price_per_sqft,
+     main = "Price per Sqft vs Bedroom", xlab = "Bedroom", ylab = "Price per Sqft")
+
+plot(houses_clean2$Bathroom, houses_clean2$price_per_sqft,
+     main = "Price per Sqft vs Bathroom", xlab = "Bathroom", ylab = "Price per Sqft")
+
+plot(houses_clean2$Property.Size, houses_clean2$price, 
+     main = "Size vs Price", xlab = "Size", ylab = "Price")
+
+plot(houses_clean2$facilities_count, houses_clean2$price_per_sqft,
+     main = "Facilities vs Price per sqft", xlab = "Facilities Count", ylab = "Price per sq ft")
+
+plot(houses_clean2$facilities_count, houses_clean2$price,
+     main = "Facilities vs Prices", xlab= "Facilities Count", ylab = "Prices")
+
+plot(houses_clean2$Total.Units, houses_clean2$price_per_sqft,
+     main = "Total Units in Condominium vs Price per Sqft", xlab = "Total Units", ylab="Price per sq ft")
+
+plot(houses_clean2$Total.Units, houses_clean2$price, 
+     main = "Total Units vs Price", xlab= "Total Units", ylab= "Price")
+
+# Step 5 Correlation matrix
+variables_for_correl = houses_clean2[, c("price", "Bedroom", "Bathroom",
+                                         "Total.Units", "facilities_count",
+                                         "Property.Size", "price_per_sqft", "Parking.Lot")]
+cor_matrix <- cor(variables_for_correl, use = "complete.obs")
+cor_matrix
+
+library(corrplot)
+
+corrplot(cor_matrix, method = "color", type = "upper",
+         addCoef.col = "black", tl.col = "blue", tl.srt = 45)

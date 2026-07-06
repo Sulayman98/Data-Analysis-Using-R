@@ -126,6 +126,8 @@ corrplot(cor_matrix, method = "color", type = "upper",
          addCoef.col = "green", tl.col = "blue", tl.srt = 45)
 
 ## Task 3: Building a linear regression model
+
+#Part 1 simple regression of prices against property size
 prices.model1 <- lm(price~Property.Size, data=houses_clean2)
 summary(prices.model1)
 plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")

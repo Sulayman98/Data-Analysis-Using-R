@@ -132,3 +132,9 @@ prices.model1 <- lm(price~Property.Size, data=houses_clean2)
 summary(prices.model1)
 plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
 abline(prices.model1, col="red")
+
+#Part 2 simple regression of prices against facilities
+prices.model2 <- lm(price~facilities_count, data=houses_clean2)
+summary(prices.model2)
+plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
+abline(prices.model2, col="red")

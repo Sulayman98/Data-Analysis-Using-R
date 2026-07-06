@@ -138,3 +138,19 @@ prices.model2 <- lm(price~facilities_count, data=houses_clean2)
 summary(prices.model2)
 plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
 abline(prices.model2, col="red")
+
+#Part 3 simple regression of prices against parking lot
+prices.model3 <- lm(price~Parking.Lot, data=houses_clean2)
+summary(prices.model3)
+plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
+abline(prices.model3, col="red")
+
+#Part 4 simple regression of prices against parking lot
+prices.model4 <- lm(price~Total.Units, data=houses_clean2)
+summary(prices.model4)
+plot(price~Property.Size, data=houses_clean2,main= "House Prices vs Property Size")
+abline(prices.model4, col="red")
+
+# Part 5: Multiple linear regression models
+prices.model5 <- lm(price ~ Property.Size + Parking.Lot, data = houses_clean2)
+summary(prices.model5)
